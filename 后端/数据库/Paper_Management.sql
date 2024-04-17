@@ -31,12 +31,10 @@ create table if not exists article(
     abstract varchar(2000) not null comment '论文摘要',
     content mediumtext not null comment '文章正文, varchar不够长',
     state varchar(3) default '草稿' comment '文章状态: 只能是[已发布] 或者 [草稿]',
-    category_id int unsigned comment '文章分类ID',
     score_amount int unsigned default 0 comment '参与评分的人数, 用以计算平均分',
     score numeric(5, 2) comment '文章平均得分，两位小数百分制',
 	create_time datetime not null comment '创建时间',
-	update_time datetime not null comment '修改时间',
-	constraint fk_article_category foreign key (category_id) references category(id)
+	update_time datetime not null comment '修改时间'
 );
 
 -- 论文-作者表,因为作者可能有多个，故不应放在article中
@@ -48,6 +46,15 @@ create table if not exists article_author(
     constraint fk_articleauthor_atricle foreign key (article_id) references article(id),
     constraint fk_articleauthor_author foreign key (author_id) references user(id),
     constraint pk_article_author primary key (article_id, author_id, is_leader, is_corresponding)
+);
+
+-- 文献库-文章对应表，二者是多对多的关系，文献库更像是收藏夹
+create table category_article(
+	category_id int unsigned not null,
+	article_id int unsigned not null,
+    constraint fk_categoryarticle_article foreign key (article_id) references article(id),
+    constraint fk_categoryarticle_category foreign key (category_id) references category(id),
+    constraint pk_category_article primary key(category_id, article_id)
 );
 
 -- 评论表 
