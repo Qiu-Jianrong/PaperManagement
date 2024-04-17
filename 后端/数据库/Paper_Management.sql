@@ -28,10 +28,12 @@ create table if not exists category(
 create table if not exists article(
 	id int unsigned primary key auto_increment comment 'ID',
     title varchar(30) not null comment '文章标题',
-    abstract varchar(2000) not null comment '论文摘要',
+    paper_abstract varchar(2000) not null comment '论文摘要',
+    keywords varchar(128) default '' comment '关键词，以&隔开',
     content mediumtext not null comment '文章正文, varchar不够长',
     state varchar(3) default '草稿' comment '文章状态: 只能是[已发布] 或者 [草稿]',
-    score_amount int unsigned default 0 comment '参与评分的人数, 用以计算平均分',
+    paper_pdf varchar(128) default '' comment 'pdf地址',
+    score_amount int unsigned default 0 comment '参与评分的人数, 用以计算平均分, 可以认为是浏览量',
     score numeric(5, 2) comment '文章平均得分，两位小数百分制',
 	create_time datetime not null comment '创建时间',
 	update_time datetime not null comment '修改时间'
