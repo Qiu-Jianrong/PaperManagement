@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    username: root
+    password: fDu241530
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/paper_management?allowMultiQueries=true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+# 数据库属性无大小写区分，所以使用下划线命名，可以匹配使用驼峰命名的程序。
+# 如果只是大小写不同也是可以匹配的，不过会被排到最后一位
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+

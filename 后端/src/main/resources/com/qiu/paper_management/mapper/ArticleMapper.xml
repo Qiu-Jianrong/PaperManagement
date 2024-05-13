@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiu.paper_management.mapper.ArticleMapper">
+<!--    动态sql-->
+    <!-- id 为方法名，resultType为返回类型，返回列表为内部对象类型而非列表本身-->
+    <!--即使没有进入收藏也返回，用left join，搭配distinct一篇文章可以进入多个收藏夹-->
+    <select id="list" resultType="com.qiu.paper_management.pojo.Article">
+        select distinct id, title, create_time, update_time from paper_management.article left join paper_management.category_article ca on article.id = ca.article_id
+        <!--where标签实现可选的条件，用if环绕-->
+        <where>
+            <if test="categoryId!=null">
+                ca.category_id=#{categoryId}
+            </if>
+        </where>
+    </select>
+    <select id="findArticleCategory" resultType="java.lang.Integer">
+        select category_id from paper_management.category_article where article_id=#{articleId};
+    </select>
+    <delete id="deleteArticle">
+        delete from paper_management.article_author where article_id=#{id};
+        delete from paper_management.category_article where article_id=#{id};
+        delete from paper_management.article where id=#{id};
+    </delete>
+</mapper>
