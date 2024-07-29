@@ -19,4 +19,16 @@ public interface ArticleService {
 
     void deleteArticle(Integer id);
     List<Integer> findAuthorsById(Integer articleId);
+
+    void update(Article article);
+
+    List<String> getLeaderByArticleId(Integer id);
+
+    List<String> getCorrByArticleId(Integer id);
+
+    List<String> getOthersByArticleId(Integer id);
+
+    List<Article> listMine(Integer categoryId, Integer userId);
+
+    PageBean<Article> search(Integer pageNum, Integer pageSize, String q, Integer threshold, Integer categoryId, Integer userId);
 }

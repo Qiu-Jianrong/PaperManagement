@@ -8,8 +8,8 @@ import java.util.List;
 
 @Mapper
 public interface CategoryMapper {
-    @Insert("insert into paper_management.category(category_name, category_alias, create_user, create_time, update_time, category_public) " +
-            "VALUES (#{categoryName}, #{categoryAlias}, #{createUser}, #{createTime}, #{updateTime}, #{categoryPublic});")
+    @Insert("insert into paper_management.category(category_name, category_alias, create_user, create_time, update_time, category_public, score, score_amount) " +
+            "VALUES (#{categoryName}, #{categoryAlias}, #{createUser}, #{createTime}, #{updateTime}, #{categoryPublic},0,0);")
     void addCategory(Category category);
 
     @Insert("insert into paper_management.category_article(category_id, article_id) values (#{categoryId}, #{articleId});")
@@ -27,7 +27,7 @@ public interface CategoryMapper {
     @Select("select * from paper_management.category where id=#{id}")
     Category findCategoryById(Integer id);
 
-    @Update("update paper_management.category set category_name=#{categoryName}, category_alias=#{categoryAlias}, category_public=#{categoryPublic},update_time=now() where id=#{id}")
+    @Update("update paper_management.category set category_name=#{categoryName}, category_alias=#{categoryAlias}, category_public=#{categoryPublic},update_time=now(), score=#{score}, score_amount=#{scoreAmount} where id=#{id}")
     void updateCategory(Category category);
 
     @Delete("delete from paper_management.category where id=#{id}")
@@ -35,4 +35,12 @@ public interface CategoryMapper {
 
     @Delete("delete from paper_management.category_article where article_id=#{articleId} and category_id=#{categoryId}")
     void removeArticle(Integer articleId, Integer categoryId);
+
+    @Delete("delete from paper_management.category_article where category_id=#{categoryId};")
+    void deleteCategoryArticle(Integer categoryId);
+
+    List<Category> search(String q, Integer threshold, Integer userId);
+
+    @Select("select create_user from paper_management.category where id=#{id};")
+    Integer findOwnerById(Integer id);
 }

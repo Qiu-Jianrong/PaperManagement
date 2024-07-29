@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiu.paper_management.mapper.CategoryMapper">
+    <select id="search" resultType="com.qiu.paper_management.pojo.Category">
+        select distinct * from paper_management.category where score>=#{threshold} and (category_name like #{q} or category_alias like #{q})
+        <if test="userId!=null">
+            and create_user=#{userId}
+        </if>
+        order by score
+
+    </select>
+</mapper>

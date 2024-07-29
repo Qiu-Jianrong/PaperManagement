@@ -7,13 +7,31 @@
     <!-- id 为方法名，resultType为返回类型，返回列表为内部对象类型而非列表本身-->
     <!--即使没有进入收藏也返回，用left join，搭配distinct一篇文章可以进入多个收藏夹-->
     <select id="list" resultType="com.qiu.paper_management.pojo.Article">
-        select distinct id, title, create_time, update_time from paper_management.article left join paper_management.category_article ca on article.id = ca.article_id
+        select distinct id, title, article.keywords,state, create_time, update_time, score, score_amount from paper_management.article left join paper_management.category_article ca on article.id = ca.article_id where state='已发布'
         <!--where标签实现可选的条件，用if环绕-->
-        <where>
             <if test="categoryId!=null">
-                ca.category_id=#{categoryId}
+                and ca.category_id=#{categoryId}
             </if>
-        </where>
+    </select>
+    <select id="search" resultType="com.qiu.paper_management.pojo.Article">
+        select distinct id, title, article.keywords, article.state, create_time, update_time, score, score_amount from paper_management.article left join paper_management.category_article ca on article.id = ca.article_id join paper_management.article_author aa on article.id = aa.article_id where (keywords like #{q} or title like #{q} or paper_abstract like #{q}) and score>= #{threshold} and state='已发布'
+            <if test="categoryId!=null">
+                and category_id=#{categoryId}
+            </if>
+            <if test="userId!=null">
+                and author_id=#{userId}
+            </if>
+        order by score
+
+    </select>
+    <select id="findArticleByAuthor" resultType="java.lang.Integer">
+        select distinct article_author.article_id from paper_management.article_author join paper_management.category_article where 1=1
+        <if test="categoryId!=null">
+            and category_id=#{categoryId}
+        </if>
+        <if test="authorId!=null">
+            and author_id=#{authorId}
+        </if>
     </select>
     <select id="findArticleCategory" resultType="java.lang.Integer">
         select category_id from paper_management.category_article where article_id=#{articleId};
@@ -23,4 +41,20 @@
         delete from paper_management.category_article where article_id=#{id};
         delete from paper_management.article where id=#{id};
     </delete>
+    <update id="update">
+        update paper_management.article
+        <set>
+            <if test="title!=null">title=#{title},</if>
+            <if test="content!=null">content=#{content},</if>
+            <if test="paperAbstract">paper_abstract=#{paperAbstract},</if>
+            <if test="keywords">keywords=#{keywords},</if>
+            <if test="state">state=#{state},</if>
+            <if test="score">score=#{score},</if>
+            <if test="scoreAmount">score_amount=#{scoreAmount},</if>
+            update_time=now()
+        </set>
+        <where>
+            id=#{id}
+        </where>
+    </update>
 </mapper>

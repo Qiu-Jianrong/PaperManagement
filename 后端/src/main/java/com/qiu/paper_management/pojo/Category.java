@@ -28,6 +28,9 @@ public class Category {
         @NotEmpty
         private boolean categoryPublic;
 
+        private float score;
+        private float scoreAmount;
+
         public interface Update{
 
         }

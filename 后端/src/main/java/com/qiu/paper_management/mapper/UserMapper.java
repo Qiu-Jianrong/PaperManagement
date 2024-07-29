@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.util.List;
+
 @Mapper
 public interface UserMapper {
     @Select("select * from paper_management.user where username=#{username};")
@@ -25,4 +27,13 @@ public interface UserMapper {
 
     @Update("update paper_management.user set password=#{newPwd},update_time=now() where id=#{id}")
     void updatePwd(String newPwd, Integer id);
+
+    @Select("select * from paper_management.user")
+    List<User> getAllUsers();
+
+    @Select("select user_pic from paper_management.user where id=#{criticId}")
+    String getImgById(Integer criticId);
+
+    @Select("select email from paper_management.user where id=#{criticId}")
+    String getEmailById(Integer criticId);
 }

@@ -20,6 +20,12 @@ public class LoginInterceptor implements HandlerInterceptor {
     // 该拦截器用于检验是否登录，方式是JWT令牌检验
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        // 前端新增需求
+        if (request.getMethod().equals("OPTIONS")){
+            response.setStatus(HttpServletResponse.SC_OK);
+            return true;
+        }
+
         String token = request.getHeader("Authorization");
 
         try{

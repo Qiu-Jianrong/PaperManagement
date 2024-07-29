@@ -64,6 +64,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCategory(Integer id) {
+//        1. 从category_article删除映射
+        categoryMapper.deleteCategoryArticle(id);
+//        2. 正式删除文献库
         categoryMapper.deleteCategory(id);
     }
 
@@ -75,5 +78,16 @@ public class CategoryServiceImpl implements CategoryService {
             // 删除不存在的记录是不会报错的
             throw new RuntimeException("不太懂如何delete会引发异常");
         }
+    }
+
+    @Override
+    public List<Category> search(String q, Integer threshold, Integer userId) {
+        q = "%" + q + "%";
+        return categoryMapper.search(q, threshold, userId);
+    }
+
+    @Override
+    public Integer findOwnerById(Integer id) {
+        return categoryMapper.findOwnerById(id);
     }
 }

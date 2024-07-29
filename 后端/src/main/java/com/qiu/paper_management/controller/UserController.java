@@ -18,9 +18,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+@CrossOrigin
 @RestController
 @Validated
 @RequestMapping("/user")
@@ -120,5 +122,11 @@ public class UserController {
         ValueOperations<String, String> operations = redis.opsForValue();
         operations.getOperations().delete("token");
         return Result.success();
+    }
+
+    @GetMapping("/allUser")
+    Result<List<User>> getAllUsers(){
+        List<User> users = userService.getAllUsers();
+        return Result.success(users);
     }
 }

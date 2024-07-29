@@ -3,7 +3,7 @@ spring:
     username: root
     password: fDu241530
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/paper_management?allowMultiQueries=true
+    url: jdbc:mysql://localhost:3306/paper_management?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
   data:
     redis:
       host: localhost
@@ -14,4 +14,13 @@ spring:
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
+
+# 防止XSS攻击
+xss:
+  # 过滤开关
+  enabled: true
+  # 排除链接（多个用逗号分隔）
+  excludes:
+  # 匹配链接（多个用逗号分隔）
+  urlPatterns: /test/*,/comment/*,/article/*,category/*,user/*
 

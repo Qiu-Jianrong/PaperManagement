@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Objects;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
@@ -51,13 +52,26 @@ public class CategoryController {
         return Result.success(categoryService.allCategory());
     }
 
+    @GetMapping("/search")
+    public Result<List<Category>> search(
+            @RequestParam String q,
+            @RequestParam Integer threshold,
+            @RequestParam(required = false) Integer userId
+    ){
+        return Result.success(categoryService.search(q, threshold, userId));
+    }
+
     // 文献库详情
     @GetMapping("/detail")
     public Result<Category> categoryDetail(@RequestParam Integer id){
         Category category = categoryService.findCategoryById(id);
-        if(category != null)
-            return Result.success(category);
-        throw new RuntimeException("抱歉，" + id + "号文献库不存在");
+        Integer userId = categoryService.findOwnerById(id);
+        if(category == null)
+            throw new RuntimeException("抱歉，" + id + "号文献库不存在");
+        // 访问别人的文献库是不允许的
+        if (!category.isCategoryPublic() && !Objects.equals(userId, ThreadLocalUtil.getId()))
+            throw new RuntimeException("抱歉，该文献库为私有，不允许访问");
+        return Result.success(category);
     }
 
     private void authorization(Integer id){

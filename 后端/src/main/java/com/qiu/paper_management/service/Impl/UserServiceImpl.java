@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -49,5 +50,20 @@ public class UserServiceImpl implements UserService {
         Map<String, Object> claims = ThreadLocalUtil.get();
         Integer id = (Integer) claims.get("id");
         userMapper.updatePwd(newPwd, id);
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userMapper.getAllUsers();
+    }
+
+    @Override
+    public String getImgById(Integer criticId) {
+        return userMapper.getImgById(criticId);
+    }
+
+    @Override
+    public String getEmailById(Integer criticId) {
+        return userMapper.getEmailById(criticId);
     }
 }
